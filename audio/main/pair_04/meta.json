@@ -1,0 +1,24 @@
+{
+  "pair_index": 18,
+  "config_id": "chain_3684",
+  "plugin_id": "yala",
+  "category": "chain",
+  "source_dataset": "guitarset",
+  "metrics": {
+    "l1": 0.520072,
+    "si_sdr_db": -20.79,
+    "snr_db": -7.8,
+    "lsd": 0.8038
+  },
+  "wet_config_active": true,
+  "wet_config_changes": [
+    "waveform differs (r=0.3586)",
+    "level +2.6 dB",
+    "dynamics compressed (-2.0 dB crest)",
+    "freq balance shifted (low -0.420)",
+    "brighter (+1190 Hz centroid)"
+  ],
+  "wet_config_correlation": 0.3586,
+  "effect_score": 0.4392,
+  "source_sample_id": "pair_018"
+}

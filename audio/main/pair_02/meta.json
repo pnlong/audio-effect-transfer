@@ -1,0 +1,24 @@
+{
+  "pair_index": 0,
+  "config_id": "n492me_0034",
+  "plugin_id": "n492me",
+  "category": "eq",
+  "source_dataset": "guitarset",
+  "metrics": {
+    "l1": 0.472676,
+    "si_sdr_db": -19.93,
+    "snr_db": -8.17,
+    "lsd": 1.2608
+  },
+  "wet_config_active": true,
+  "wet_config_changes": [
+    "waveform differs (r=0.1425)",
+    "level +2.0 dB",
+    "dynamics compressed (-2.0 dB crest)",
+    "freq balance shifted (low +0.195)",
+    "darker (-850 Hz centroid)"
+  ],
+  "wet_config_correlation": 0.1425,
+  "effect_score": 0.4058,
+  "source_sample_id": "pair_000"
+}

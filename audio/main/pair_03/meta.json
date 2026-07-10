@@ -1,0 +1,24 @@
+{
+  "pair_index": 52,
+  "config_id": "chain_1193",
+  "plugin_id": "ssq",
+  "category": "chain",
+  "source_dataset": "guitarset",
+  "metrics": {
+    "l1": 0.235319,
+    "si_sdr_db": -24.53,
+    "snr_db": -20.21,
+    "lsd": 1.3315
+  },
+  "wet_config_active": true,
+  "wet_config_changes": [
+    "waveform differs (r=0.1325)",
+    "level -16.9 dB",
+    "dynamics compressed (-1.3 dB crest)",
+    "freq balance shifted (low +0.319)",
+    "darker (-752 Hz centroid)"
+  ],
+  "wet_config_correlation": 0.1325,
+  "effect_score": 0.4981,
+  "source_sample_id": "pair_052"
+}

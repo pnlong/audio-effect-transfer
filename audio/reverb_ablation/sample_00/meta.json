@@ -1,0 +1,19 @@
+{
+  "plugin_id": "airwindows_consolidated_reverb",
+  "source_dataset": "guitarset",
+  "ir_dataset_index": 19,
+  "param_mlp": {
+    "stft_l1_error": 8.9295,
+    "time_l1_error": 0.001745
+  },
+  "param_mlp_checkpoint": "/storage/phillip/neural_audio_effects/training/train_reverb_param_mlp/checkpoints/reverb_mlp_default_20260428_003530/best_val.pt",
+  "param_mlp_step": 22000,
+  "ir_gan": {
+    "stft_l1_error": 3.1416,
+    "time_l1_error": 0.002997
+  },
+  "delta_stft": -5.7879,
+  "ir_gan_checkpoint": "/storage/phillip/neural_audio_effects/training/train_reverb_ir_gan/checkpoints/vocos_joint_scratch_6L_20260507_164526/best_val.pt",
+  "ir_gan_step": 70000,
+  "source_sample_id": "sample_029"
+}

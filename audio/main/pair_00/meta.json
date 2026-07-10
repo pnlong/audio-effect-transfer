@@ -1,0 +1,24 @@
+{
+  "pair_index": 48,
+  "config_id": "britpressor_0044",
+  "plugin_id": "britpressor",
+  "category": "vca_compressor",
+  "source_dataset": "guitarset",
+  "metrics": {
+    "l1": 0.088511,
+    "si_sdr_db": -25.62,
+    "snr_db": -11.11,
+    "lsd": 1.0818
+  },
+  "wet_config_active": true,
+  "wet_config_changes": [
+    "waveform differs (r=0.8485)",
+    "level -12.1 dB",
+    "dynamics expanded (+4.1 dB crest)",
+    "freq balance shifted (low +0.047)",
+    "brighter (+248 Hz centroid)"
+  ],
+  "wet_config_correlation": 0.8485,
+  "effect_score": 0.2882,
+  "source_sample_id": "pair_048"
+}

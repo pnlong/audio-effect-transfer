@@ -1,0 +1,24 @@
+{
+  "pair_index": 51,
+  "config_id": "chain_1320",
+  "plugin_id": "tuba",
+  "category": "chain",
+  "source_dataset": "guitarset",
+  "metrics": {
+    "l1": 0.361038,
+    "si_sdr_db": -21.86,
+    "snr_db": -2.46,
+    "lsd": 0.6855
+  },
+  "wet_config_active": true,
+  "wet_config_changes": [
+    "waveform differs (r=-0.0151)",
+    "level +5.8 dB",
+    "dynamics compressed (-5.8 dB crest)",
+    "freq balance shifted (low -0.204)",
+    "brighter (+305 Hz centroid)"
+  ],
+  "wet_config_correlation": -0.0151,
+  "effect_score": 0.5602,
+  "source_sample_id": "pair_051"
+}

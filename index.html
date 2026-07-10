@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WorldAFX: Content-Invariant Audio Effect Representations</title>
+
+  <!-- Bootstrap 5 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ──────────────────────────────────────────────────────────
+     NAVBAR
+────────────────────────────────────────────────────────── -->
+<nav class="navbar navbar-expand-md sticky-top bg-white">
+  <div class="container">
+    <span class="navbar-brand">WorldAFX</span>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="#abstract">Abstract</a></li>
+        <li class="nav-item"><a class="nav-link" href="#method">Method</a></li>
+        <li class="nav-item"><a class="nav-link" href="#samples">Audio Samples</a></li>
+        <li class="nav-item"><a class="nav-link" href="#ablations">Ablations</a></li>
+        <li class="nav-item"><a class="nav-link" href="#citation">Citation</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- ──────────────────────────────────────────────────────────
+     HERO
+────────────────────────────────────────────────────────── -->
+<section id="hero">
+  <div class="container">
+    <h1 class="paper-title">WorldAFX: Content-Invariant<br>Audio Effect Representations</h1>
+
+    <!-- TODO: fill in full author list -->
+    <p class="authors">
+      Phillip Long<sup>1,2</sup><!-- , Author Two<sup>1</sup>, Author Three<sup>1</sup> -->
+    </p>
+    <p class="affiliations">
+      <sup>1</sup>Smule, Inc. &nbsp;&nbsp; <sup>2</sup>UC San Diego
+    </p>
+
+    <div class="link-pills">
+      <!-- TODO: add arXiv/paper link when available -->
+      <a class="link-pill disabled" href="#" aria-disabled="true">
+        <i class="fa-regular fa-file-pdf"></i> Paper (coming soon)
+      </a>
+      <a class="link-pill" href="https://github.com/smule/neural-audio-effects" target="_blank">
+        <i class="fa-brands fa-github"></i> Code
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────────────
+     ABSTRACT
+────────────────────────────────────────────────────────── -->
+<section id="abstract">
+  <div class="container">
+    <h2 class="section-title text-center">Abstract</h2>
+    <!-- TODO: replace with final paper abstract -->
+    <p>
+      We present <strong>WorldAFX</strong>, a system that learns to represent audio effects — such
+      as equalization, dynamic compression, saturation, and reverberation — directly from
+      dry/wet audio pairs, without access to plugin parameter labels. Our key insight is
+      that a content-invariant representation can be learned by training on pairs where
+      the same effect is applied to <em>different</em> source audio, forcing the encoder to
+      capture only the effect's character and not the content. At inference time, given a
+      dry signal and a reference wet recording, WorldAFX predicts the effect parameters
+      needed to match the reference. We evaluate across a diverse set of professional VST3
+      plugins spanning multiple effect categories and demonstrate strong reconstruction
+      quality both via objective metrics and a MUSHRA listening study.
+    </p>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────────────
+     METHOD
+────────────────────────────────────────────────────────── -->
+<section id="method">
+  <div class="container">
+    <h2 class="section-title">Method</h2>
+    <p>
+      WorldAFX uses a <strong>factorized architecture</strong>: a shared audio encoder maps a wet
+      reference clip to a <em>tone embedding</em>, and each DSP module (EQ, compressor,
+      saturator, reverb) contains its own lightweight MLP that reads from this embedding to
+      predict its plugin parameters. A differentiable neural nonlinearity handles residual
+      timbral shaping beyond what the DSP modules capture. The entire system is trained
+      end-to-end on <strong>content-invariant pairs</strong> — the reference and target use
+      the <em>same</em> audio effect settings applied to <em>different</em> source recordings —
+      preventing the encoder from memorizing content and ensuring the tone embedding captures
+      only effect character.
+    </p>
+    <div class="architecture-figure">
+      <!-- Place the converted PNG at project_page/img/architecture.png -->
+      <!-- Source PDF: scratchpaper/submission/figs/smule_architecture_diagram.pdf -->
+      <img src="img/architecture.png" alt="WorldAFX system architecture diagram" />
+      <p class="figure-caption">
+        <strong>Figure 1.</strong> WorldAFX architecture. A shared encoder extracts a tone
+        embedding from a wet reference. Each DSP module predicts its own parameters via
+        a dedicated MLP. A neural nonlinearity captures residual shaping.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────────────
+     AUDIO SAMPLES — MAIN RESULTS
+────────────────────────────────────────────────────────── -->
+<section id="samples">
+  <div class="container">
+    <h2 class="section-title">Audio Samples</h2>
+    <p class="section-subtitle">
+      Each row shows a dry input, the ground-truth reference (real plugin output), and
+      WorldAFX predictions before and after GAN fine-tuning. The system receives only the
+      dry signal and a reference wet clip; it predicts plugin parameters to match the effect.
+    </p>
+
+    <!-- ── Example 1 — BritPressor (VCA Compression) ── -->
+    <div class="audio-example">
+      <div class="example-label">
+        <span class="badge-effect">Compression</span>
+        <span class="badge-content">Guitar — BritPressor</span>
+      </div>
+      <div class="table-responsive">
+        <table class="audio-table">
+          <thead><tr>
+            <th>Dry (Input)</th><th>Reference (Real Plugin)</th>
+            <th>WorldAFX Pre-GAN</th><th>WorldAFX Post-GAN</th>
+          </tr></thead>
+          <tbody><tr>
+            <td><audio controls src="audio/main/pair_00/dry.mp3"></audio></td>
+            <td><audio controls src="audio/main/pair_00/reference.mp3"></audio></td>
+            <td><audio controls src="audio/main/pair_00/pre_gan.mp3"></audio></td>
+            <td><audio controls src="audio/main/pair_00/post_gan.mp3"></audio></td>
+          </tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── Example 2 — Blue Cat Triple EQ (EQ chain) ── -->
+    <div class="audio-example">
+      <div class="example-label">
+        <span class="badge-effect">EQ</span>
+        <span class="badge-content">Guitar — Blue Cat Triple EQ</span>
+      </div>
+      <div class="table-responsive">
+        <table class="audio-table">
+          <thead><tr>
+            <th>Dry (Input)</th><th>Reference (Real Plugin)</th>
+            <th>WorldAFX Pre-GAN</th><th>WorldAFX Post-GAN</th>
+          </tr></thead>
+          <tbody><tr>
+            <td><audio controls src="audio/main/pair_01/dry.mp3"></audio></td>
+            <td><audio controls src="audio/main/pair_01/reference.mp3"></audio></td>
+            <td><audio controls src="audio/main/pair_01/pre_gan.mp3"></audio></td>
+            <td><audio controls src="audio/main/pair_01/post_gan.mp3"></audio></td>
+          </tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── Example 3 — N492me EQ ── -->
+    <div class="audio-example">
+      <div class="example-label">
+        <span class="badge-effect">EQ</span>
+        <span class="badge-content">Guitar — N492me EQ</span>
+      </div>
+      <div class="table-responsive">
+        <table class="audio-table">
+          <thead><tr>
+            <th>Dry (Input)</th><th>Reference (Real Plugin)</th>
+            <th>WorldAFX Pre-GAN</th><th>WorldAFX Post-GAN</th>
+          </tr></thead>
+          <tbody><tr>
+            <td><audio controls src="audio/main/pair_02/dry.mp3"></audio></td>
+            <td><audio controls src="audio/main/pair_02/reference.mp3"></audio></td>
+            <td><audio controls src="audio/main/pair_02/pre_gan.mp3"></audio></td>
+            <td><audio controls src="audio/main/pair_02/post_gan.mp3"></audio></td>
+          </tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── Example 4 — SSQ Channel Strip (EQ + Compression) ── -->
+    <div class="audio-example">
+      <div class="example-label">
+        <span class="badge-effect">EQ + Compression</span>
+        <span class="badge-content">Guitar — SSQ Channel Strip</span>
+      </div>
+      <div class="table-responsive">
+        <table class="audio-table">
+          <thead><tr>
+            <th>Dry (Input)</th><th>Reference (Real Plugin)</th>
+            <th>WorldAFX Pre-GAN</th><th>WorldAFX Post-GAN</th>
+          </tr></thead>
+          <tbody><tr>
+            <td><audio controls src="audio/main/pair_03/dry.mp3"></audio></td>
+            <td><audio controls src="audio/main/pair_03/reference.mp3"></audio></td>
+            <td><audio controls src="audio/main/pair_03/pre_gan.mp3"></audio></td>
+            <td><audio controls src="audio/main/pair_03/post_gan.mp3"></audio></td>
+          </tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── Example 5 — YALA Limiter ── -->
+    <div class="audio-example">
+      <div class="example-label">
+        <span class="badge-effect">Limiting</span>
+        <span class="badge-content">Guitar — YALA Limiter</span>
+      </div>
+      <div class="table-responsive">
+        <table class="audio-table">
+          <thead><tr>
+            <th>Dry (Input)</th><th>Reference (Real Plugin)</th>
+            <th>WorldAFX Pre-GAN</th><th>WorldAFX Post-GAN</th>
+          </tr></thead>
+          <tbody><tr>
+            <td><audio controls src="audio/main/pair_04/dry.mp3"></audio></td>
+            <td><audio controls src="audio/main/pair_04/reference.mp3"></audio></td>
+            <td><audio controls src="audio/main/pair_04/pre_gan.mp3"></audio></td>
+            <td><audio controls src="audio/main/pair_04/post_gan.mp3"></audio></td>
+          </tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── Example 6 — TDR SlickEQ ── -->
+    <div class="audio-example">
+      <div class="example-label">
+        <span class="badge-effect">EQ</span>
+        <span class="badge-content">Guitar — TDR SlickEQ</span>
+      </div>
+      <div class="table-responsive">
+        <table class="audio-table">
+          <thead><tr>
+            <th>Dry (Input)</th><th>Reference (Real Plugin)</th>
+            <th>WorldAFX Pre-GAN</th><th>WorldAFX Post-GAN</th>
+          </tr></thead>
+          <tbody><tr>
+            <td><audio controls src="audio/main/pair_05/dry.mp3"></audio></td>
+            <td><audio controls src="audio/main/pair_05/reference.mp3"></audio></td>
+            <td><audio controls src="audio/main/pair_05/pre_gan.mp3"></audio></td>
+            <td><audio controls src="audio/main/pair_05/post_gan.mp3"></audio></td>
+          </tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── Example 7 — Tuba ── -->
+    <div class="audio-example">
+      <div class="example-label">
+        <span class="badge-effect">FX Chain</span>
+        <span class="badge-content">Guitar — Tuba</span>
+      </div>
+      <div class="table-responsive">
+        <table class="audio-table">
+          <thead><tr>
+            <th>Dry (Input)</th><th>Reference (Real Plugin)</th>
+            <th>WorldAFX Pre-GAN</th><th>WorldAFX Post-GAN</th>
+          </tr></thead>
+          <tbody><tr>
+            <td><audio controls src="audio/main/pair_06/dry.mp3"></audio></td>
+            <td><audio controls src="audio/main/pair_06/reference.mp3"></audio></td>
+            <td><audio controls src="audio/main/pair_06/pre_gan.mp3"></audio></td>
+            <td><audio controls src="audio/main/pair_06/post_gan.mp3"></audio></td>
+          </tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── Example 8 — 4K EQ ── -->
+    <div class="audio-example">
+      <div class="example-label">
+        <span class="badge-effect">EQ</span>
+        <span class="badge-content">Guitar — 4K EQ</span>
+      </div>
+      <div class="table-responsive">
+        <table class="audio-table">
+          <thead><tr>
+            <th>Dry (Input)</th><th>Reference (Real Plugin)</th>
+            <th>WorldAFX Pre-GAN</th><th>WorldAFX Post-GAN</th>
+          </tr></thead>
+          <tbody><tr>
+            <td><audio controls src="audio/main/pair_07/dry.mp3"></audio></td>
+            <td><audio controls src="audio/main/pair_07/reference.mp3"></audio></td>
+            <td><audio controls src="audio/main/pair_07/pre_gan.mp3"></audio></td>
+            <td><audio controls src="audio/main/pair_07/post_gan.mp3"></audio></td>
+          </tr></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────────────
+     ABLATIONS
+────────────────────────────────────────────────────────── -->
+<section id="ablations">
+  <div class="container">
+    <h2 class="section-title">Ablation Studies</h2>
+
+    <!-- DSP Training Strategy -->
+    <h3 style="font-size:1.2rem; font-weight:700; margin-bottom:0.5rem;">
+      DSP Training Strategy
+    </h3>
+    <p class="section-subtitle">
+      We compare three strategies for training the per-module parameter MLPs: training each
+      module separately, joint fine-tuning from separately-trained modules, and training all
+      modules jointly from scratch.
+    </p>
+
+    <!-- DSP Example 1 — BYOD Distortion, Guitar -->
+    <div class="audio-example">
+      <div class="example-label">
+        <span class="badge-effect">Distortion</span>
+        <span class="badge-content">Guitar — BYOD</span>
+      </div>
+      <div class="table-responsive">
+        <table class="audio-table">
+          <thead>
+            <tr>
+              <th>Dry</th>
+              <th>Reference</th>
+              <th>Separate</th>
+              <th>Joint Finetune</th>
+              <th>Joint Scratch</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><audio controls src="audio/dsp_ablation/sample_00/dry.mp3"></audio></td>
+              <td><audio controls src="audio/dsp_ablation/sample_00/reference.mp3"></audio></td>
+              <td><audio controls src="audio/dsp_ablation/sample_00/separate.mp3"></audio></td>
+              <td><audio controls src="audio/dsp_ablation/sample_00/joint_finetune.mp3"></audio></td>
+              <td><audio controls src="audio/dsp_ablation/sample_00/joint_scratch.mp3"></audio></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- DSP Example 2 — Valhalla Space Modulator (Flanger), Music -->
+    <div class="audio-example">
+      <div class="example-label">
+        <span class="badge-effect">Modulation</span>
+        <span class="badge-content">Music — Valhalla Space Modulator</span>
+      </div>
+      <div class="table-responsive">
+        <table class="audio-table">
+          <thead>
+            <tr>
+              <th>Dry</th>
+              <th>Reference</th>
+              <th>Separate</th>
+              <th>Joint Finetune</th>
+              <th>Joint Scratch</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><audio controls src="audio/dsp_ablation/sample_01/dry.mp3"></audio></td>
+              <td><audio controls src="audio/dsp_ablation/sample_01/reference.mp3"></audio></td>
+              <td><audio controls src="audio/dsp_ablation/sample_01/separate.mp3"></audio></td>
+              <td><audio controls src="audio/dsp_ablation/sample_01/joint_finetune.mp3"></audio></td>
+              <td><audio controls src="audio/dsp_ablation/sample_01/joint_scratch.mp3"></audio></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- DSP Example 3 — FET Compressor, Guitar -->
+    <div class="audio-example">
+      <div class="example-label">
+        <span class="badge-effect">Compression</span>
+        <span class="badge-content">Guitar — FET Compressor</span>
+      </div>
+      <div class="table-responsive">
+        <table class="audio-table">
+          <thead>
+            <tr>
+              <th>Dry</th>
+              <th>Reference</th>
+              <th>Separate</th>
+              <th>Joint Finetune</th>
+              <th>Joint Scratch</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><audio controls src="audio/dsp_ablation/sample_02/dry.mp3"></audio></td>
+              <td><audio controls src="audio/dsp_ablation/sample_02/reference.mp3"></audio></td>
+              <td><audio controls src="audio/dsp_ablation/sample_02/separate.mp3"></audio></td>
+              <td><audio controls src="audio/dsp_ablation/sample_02/joint_finetune.mp3"></audio></td>
+              <td><audio controls src="audio/dsp_ablation/sample_02/joint_scratch.mp3"></audio></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- DSP Example 4 -->
+    <div class="audio-example">
+      <div class="example-label">
+        <span class="badge-effect">FX Chain</span>
+        <span class="badge-content">Guitar</span>
+      </div>
+      <div class="table-responsive">
+        <table class="audio-table">
+          <thead>
+            <tr>
+              <th>Dry</th>
+              <th>Reference</th>
+              <th>Separate</th>
+              <th>Joint Finetune</th>
+              <th>Joint Scratch</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><audio controls src="audio/dsp_ablation/sample_03/dry.mp3"></audio></td>
+              <td><audio controls src="audio/dsp_ablation/sample_03/reference.mp3"></audio></td>
+              <td><audio controls src="audio/dsp_ablation/sample_03/separate.mp3"></audio></td>
+              <td><audio controls src="audio/dsp_ablation/sample_03/joint_finetune.mp3"></audio></td>
+              <td><audio controls src="audio/dsp_ablation/sample_03/joint_scratch.mp3"></audio></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <hr style="margin: 3rem 0;" />
+
+    <!-- Reverb Architecture -->
+    <h3 style="font-size:1.2rem; font-weight:700; margin-bottom:0.5rem;">
+      Reverb Architecture
+    </h3>
+    <p class="section-subtitle">
+      For reverberation, we compare a direct parameter regression approach (Param MLP) against
+      an impulse-response GAN (IR GAN) that generates a full room IR conditioned on the
+      tone embedding.
+    </p>
+
+    <!-- Reverb Example 1 — Airwindows Consolidated Reverb, Guitar -->
+    <div class="audio-example">
+      <div class="example-label">
+        <span class="badge-effect">Reverb</span>
+        <span class="badge-content">Guitar — Airwindows</span>
+      </div>
+      <div class="table-responsive">
+        <table class="audio-table">
+          <thead>
+            <tr>
+              <th>Dry</th>
+              <th>Reference</th>
+              <th>Param MLP</th>
+              <th>IR GAN</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><audio controls src="audio/reverb_ablation/sample_00/dry.mp3"></audio></td>
+              <td><audio controls src="audio/reverb_ablation/sample_00/reference.mp3"></audio></td>
+              <td><audio controls src="audio/reverb_ablation/sample_00/param_mlp.mp3"></audio></td>
+              <td><audio controls src="audio/reverb_ablation/sample_00/ir_gan.mp3"></audio></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Reverb Example 2 — Dragonfly Early Reflections, Music -->
+    <div class="audio-example">
+      <div class="example-label">
+        <span class="badge-effect">Reverb</span>
+        <span class="badge-content">Music — Dragonfly Early Reflections</span>
+      </div>
+      <div class="table-responsive">
+        <table class="audio-table">
+          <thead>
+            <tr>
+              <th>Dry</th>
+              <th>Reference</th>
+              <th>Param MLP</th>
+              <th>IR GAN</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><audio controls src="audio/reverb_ablation/sample_01/dry.mp3"></audio></td>
+              <td><audio controls src="audio/reverb_ablation/sample_01/reference.mp3"></audio></td>
+              <td><audio controls src="audio/reverb_ablation/sample_01/param_mlp.mp3"></audio></td>
+              <td><audio controls src="audio/reverb_ablation/sample_01/ir_gan.mp3"></audio></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Reverb Example 3 — Dragonfly Room Reverb, Guitar -->
+    <div class="audio-example">
+      <div class="example-label">
+        <span class="badge-effect">Reverb</span>
+        <span class="badge-content">Guitar — Dragonfly Room</span>
+      </div>
+      <div class="table-responsive">
+        <table class="audio-table">
+          <thead>
+            <tr>
+              <th>Dry</th>
+              <th>Reference</th>
+              <th>Param MLP</th>
+              <th>IR GAN</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><audio controls src="audio/reverb_ablation/sample_02/dry.mp3"></audio></td>
+              <td><audio controls src="audio/reverb_ablation/sample_02/reference.mp3"></audio></td>
+              <td><audio controls src="audio/reverb_ablation/sample_02/param_mlp.mp3"></audio></td>
+              <td><audio controls src="audio/reverb_ablation/sample_02/ir_gan.mp3"></audio></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Reverb Example 4 — Airwindows Consolidated Reverb, Guitar -->
+    <div class="audio-example">
+      <div class="example-label">
+        <span class="badge-effect">Reverb</span>
+        <span class="badge-content">Guitar — Airwindows</span>
+      </div>
+      <div class="table-responsive">
+        <table class="audio-table">
+          <thead>
+            <tr>
+              <th>Dry</th>
+              <th>Reference</th>
+              <th>Param MLP</th>
+              <th>IR GAN</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><audio controls src="audio/reverb_ablation/sample_03/dry.mp3"></audio></td>
+              <td><audio controls src="audio/reverb_ablation/sample_03/reference.mp3"></audio></td>
+              <td><audio controls src="audio/reverb_ablation/sample_03/param_mlp.mp3"></audio></td>
+              <td><audio controls src="audio/reverb_ablation/sample_03/ir_gan.mp3"></audio></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────────────
+     CITATION
+────────────────────────────────────────────────────────── -->
+<section id="citation">
+  <div class="container">
+    <h2 class="section-title text-center">Citation</h2>
+    <!-- TODO: fill in once paper is published -->
+    <pre>@inproceedings{long2025worldafx,
+  title     = {WorldAFX: Content-Invariant Audio Effect Representations},
+  author    = {Long, Phillip and others},
+  booktitle = {TODO},
+  year      = {2025},
+}</pre>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────────────
+     FOOTER
+────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="container">
+    <p>© 2025 Smule, Inc. &nbsp;|&nbsp; UC San Diego</p>
+  </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

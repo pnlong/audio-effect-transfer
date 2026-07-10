@@ -1,0 +1,24 @@
+{
+  "pair_index": 5,
+  "config_id": "chain_5876",
+  "plugin_id": "4k_eq",
+  "category": "chain",
+  "source_dataset": "guitarset",
+  "metrics": {
+    "l1": 0.027447,
+    "si_sdr_db": -34.25,
+    "snr_db": -11.7,
+    "lsd": 0.7167
+  },
+  "wet_config_active": true,
+  "wet_config_changes": [
+    "waveform differs (r=-0.1786)",
+    "level -26.6 dB",
+    "dynamics expanded (+4.3 dB crest)",
+    "freq balance shifted (low -0.041)",
+    "brighter (+373 Hz centroid)"
+  ],
+  "wet_config_correlation": -0.1786,
+  "effect_score": 0.4143,
+  "source_sample_id": "pair_005"
+}

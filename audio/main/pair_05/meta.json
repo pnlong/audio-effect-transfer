@@ -1,0 +1,24 @@
+{
+  "pair_index": 16,
+  "config_id": "chain_0980",
+  "plugin_id": "tdr_vos_slickeq",
+  "category": "chain",
+  "source_dataset": "guitarset",
+  "metrics": {
+    "l1": 0.57234,
+    "si_sdr_db": -28.21,
+    "snr_db": -9.65,
+    "lsd": 0.8115
+  },
+  "wet_config_active": true,
+  "wet_config_changes": [
+    "waveform differs (r=-0.0377)",
+    "level +2.8 dB",
+    "dynamics compressed (-2.5 dB crest)",
+    "freq balance shifted (low -0.241)",
+    "darker (-1053 Hz centroid)"
+  ],
+  "wet_config_correlation": -0.0377,
+  "effect_score": 0.4863,
+  "source_sample_id": "pair_016"
+}

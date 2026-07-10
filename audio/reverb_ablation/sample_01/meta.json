@@ -1,0 +1,19 @@
+{
+  "plugin_id": "dragonfly_early_reflections",
+  "source_dataset": "musdb18",
+  "ir_dataset_index": 476,
+  "param_mlp": {
+    "stft_l1_error": 0.9569,
+    "time_l1_error": 0.000918
+  },
+  "param_mlp_checkpoint": "/storage/phillip/neural_audio_effects/training/train_reverb_param_mlp/checkpoints/reverb_mlp_default_20260428_003530/best_val.pt",
+  "param_mlp_step": 22000,
+  "ir_gan": {
+    "stft_l1_error": 7.1496,
+    "time_l1_error": 0.000602
+  },
+  "delta_stft": 6.1927,
+  "ir_gan_checkpoint": "/storage/phillip/neural_audio_effects/training/train_reverb_ir_gan/checkpoints/vocos_joint_scratch_6L_20260507_164526/best_val.pt",
+  "ir_gan_step": 70000,
+  "source_sample_id": "sample_021"
+}

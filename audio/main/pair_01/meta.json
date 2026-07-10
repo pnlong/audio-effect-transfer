@@ -1,0 +1,24 @@
+{
+  "pair_index": 3,
+  "config_id": "chain_1816",
+  "plugin_id": "blue_cat_triple_eq",
+  "category": "chain",
+  "source_dataset": "guitarset",
+  "metrics": {
+    "l1": 0.049498,
+    "si_sdr_db": -32.04,
+    "snr_db": -3.26,
+    "lsd": 1.2499
+  },
+  "wet_config_active": true,
+  "wet_config_changes": [
+    "waveform differs (r=-0.1305)",
+    "level -9.8 dB",
+    "dynamics expanded (+1.8 dB crest)",
+    "freq balance shifted (low +0.308)",
+    "darker (-2495 Hz centroid)"
+  ],
+  "wet_config_correlation": -0.1305,
+  "effect_score": 0.5627,
+  "source_sample_id": "pair_003"
+}
