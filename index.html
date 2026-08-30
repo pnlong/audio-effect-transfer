@@ -121,11 +121,13 @@
       only effect character.
     </p>
     <div class="architecture-figure">
-      <img src="img/smule_architecture_diagram.png" alt="WorldAFX system architecture diagram" />
+      <img src="img/invertibility_diagram.png" alt="WorldAFX training pair construction and invertibility at inference diagram" />
       <p class="figure-caption">
-        <strong>Figure 1.</strong> WorldAFX architecture. A shared encoder extracts a tone
-        embedding from a wet reference. Each DSP module predicts its own parameters via
-        a dedicated MLP. A neural nonlinearity captures residual shaping.
+        <strong>Figure 1.</strong> WorldAFX is trained on content-invariant pairs: the same
+        plugin setting applied to disjoint source audio (b). At inference, the predicted
+        tone embedding <em>z</em> generalizes to unseen dry content — applying <em>g</em>(dry<sub>B</sub>; z)
+        recovers wet<sub>B</sub>, demonstrating that the embedding captures effect character
+        independent of content (a).
       </p>
     </div>
   </div>
