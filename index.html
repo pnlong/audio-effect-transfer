@@ -42,6 +42,7 @@
         <li class="nav-item"><a class="nav-link" href="#abstract">Abstract</a></li>
         <li class="nav-item"><a class="nav-link" href="#method">Method</a></li>
         <li class="nav-item"><a class="nav-link" href="#samples">Audio Samples</a></li>
+        <li class="nav-item"><a class="nav-link" href="#text-to-effect">Text-to-Effect</a></li>
         <li class="nav-item"><a class="nav-link" href="#ablations">Ablations</a></li>
         <li class="nav-item"><a class="nav-link" href="#citation">Citation</a></li>
       </ul>
@@ -326,6 +327,67 @@
       </div>
     </div>
 
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────────────
+     TEXT-TO-EFFECT
+────────────────────────────────────────────────────────── -->
+<section id="text-to-effect">
+  <div class="container">
+    <h2 class="section-title">Text-to-Effect</h2>
+    <p class="section-subtitle">
+      A frozen sentence encoder is aligned to the same embedding space as the audio
+      encoder, so a text description can stand in for a wet reference: the projected
+      embedding <em>z</em> is decoded by the same DSP inverse and applied to the dry clip
+      below. This demonstrates that the space is indexable from outside audio, not a
+      retrieval benchmark.
+    </p>
+
+    <div class="audio-example">
+      <div class="example-label">
+        <span class="badge-effect">Dry Input</span>
+        <span class="badge-content">Guitar (unprocessed)</span>
+      </div>
+      <div class="table-responsive">
+        <table class="audio-table">
+          <thead><tr><th>Dry</th></tr></thead>
+          <tbody><tr>
+            <td><audio controls src="audio/text_projection/dry.mp3"></audio></td>
+          </tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="audio-table">
+        <thead><tr>
+          <th>Text Description</th><th>Rendered Effect</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>“clean and transparent, no coloration”</td>
+            <td><audio controls src="audio/text_projection/desc_00.mp3"></audio></td>
+          </tr>
+          <tr>
+            <td>“warm analog tape saturation”</td>
+            <td><audio controls src="audio/text_projection/desc_01.mp3"></audio></td>
+          </tr>
+          <tr>
+            <td>“aggressive distortion with scooped mids”</td>
+            <td><audio controls src="audio/text_projection/desc_02.mp3"></audio></td>
+          </tr>
+          <tr>
+            <td>“bright and airy plate reverb”</td>
+            <td><audio controls src="audio/text_projection/desc_03.mp3"></audio></td>
+          </tr>
+          <tr>
+            <td>“heavy compression, punchy and loud”</td>
+            <td><audio controls src="audio/text_projection/desc_04.mp3"></audio></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </section>
 
