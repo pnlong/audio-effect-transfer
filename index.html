@@ -60,11 +60,12 @@
     <p class="authors">
       Phillip Long<sup>1,2,*</sup>,
       Yongyi Zang<sup>1,*</sup>,
-      Christodoulos Benetatos<sup>1</sup>,
       Qihui Yang<sup>1</sup>,
+      Christodoulos Benetatos<sup>1</sup>,
       Junfei Liu<sup>1</sup>,
+      Randal Leistikow<sup>1</sup>,
       Julian McAuley<sup>2</sup>,
-      Randal Leistikow<sup>1</sup>
+      Perry R. Cook<sup>1</sup>
     </p>
     <p class="affiliations">
       <sup>1</sup>Smule, Inc. &nbsp;&nbsp; <sup>2</sup>UC San Diego &nbsp;&nbsp; <sup>*</sup>Equal contribution
@@ -86,22 +87,20 @@
   <div class="container">
     <h2 class="section-title text-center">Abstract</h2>
     <p>
-      Neural models of audio effects have mostly been built as black-box emulators of one
-      device or one effect type. In this work we learn a general representation space of
-      audio effects — <strong>TAPE</strong> (Tone-Aware Plugin Embeddings) — and apply it to
-      new material in real time. An encoder maps a processed reference to an embedding
-      <em>z</em> ∈ ℝ<sup>256</sup> that does not depend on the source.
-      To decode <em>z</em> into human-readable primitives for signal shaping, we design a
-      factorized differentiable chain of digital signal processing (DSP) modules for
-      equalization, compression, waveshaping, residual color, and reverberation, and train
-      it to reproduce the treatment of the reference on a dry recording the encoder has
-      never seen. As the inverse is decoded as a series of DSP parameters, it is fast enough
-      to run at real-time speed on a single core of consumer CPUs. Furthermore, we show that
-      the learned representation space can be easily aligned with text, and enables planning
-      in this space at test time through test-time adaptation. To the best of our knowledge,
-      this is the first work to learn a general representation space of audio effects that
-      is invertible, human-readable, and runs at real-time speed on a single core of
-      consumer CPUs.
+      Musicians and mixing engineers often can decipher the signal processing chain they
+      hear on a reference recording, then adapt it to new material. We present
+      <strong>TAPE</strong> (Transformations of Audio Parameter Embeddings), which estimates
+      this processing from the processed reference audio alone. An encoder trained to
+      identify processors in eight major effect families maps the reference to an embedding.
+      A differentiable digital signal processing (DSP) chain decodes the embedding into
+      editable parameters in one forward pass and applies them to a different unprocessed
+      recording. Its modules are equalization, compression, waveshaping, a small residual
+      network, and reverberation. TAPE achieves lower spectral error than the previous state
+      of the art for both single-step regression and multi-step search, while running
+      275&times; faster than the multi-step approach. Because the decoder outputs DSP
+      parameters, its chain can also run causally: a C++ implementation with the trained
+      weights processed 128-sample buffers 1.8&times; faster than real time, with no missed
+      deadlines.
     </p>
   </div>
 </section>
@@ -113,8 +112,8 @@
   <div class="container">
     <h2 class="section-title">Method</h2>
     <p>
-      TAPE (Tone-Aware Plugin Embeddings) uses a shared audio encoder that maps a wet
-      reference clip to a <em>tone embedding</em>
+      TAPE (Transformations of Audio Parameter Embeddings) uses a shared audio encoder that
+      maps a wet reference clip to an embedding
       <em>z</em> ∈ ℝ<sup>256</sup> that does not depend on the source it was heard on. To
       decode <em>z</em> into human-readable primitives for signal shaping, the inverse
       <em>g</em> is a <strong>factorized differentiable chain of DSP modules</strong> for
@@ -126,13 +125,15 @@
       not the content.
     </p>
     <div class="architecture-figure">
-      <img src="img/invertibility_diagram.png" alt="Training pair construction and invertibility at inference diagram" />
+      <img src="img/overview.png" alt="Overview of TAPE: encoder, embedding, and DSP chain diagram" />
       <p class="figure-caption">
-        <strong>Figure 1.</strong> Training on content-invariant pairs: the same
-        plugin setting applied to disjoint source audio (b). At inference, the predicted
-        tone embedding <em>z</em> generalizes to unseen dry content — applying <em>g</em>(dry<sub>B</sub>; z)
-        recovers wet<sub>B</sub>, demonstrating that the embedding captures effect character
-        independent of content (a).
+        <strong>Figure 1.</strong> Overview of TAPE. The encoder <em>f</em> maps a processed
+        reference wet<sub>A</sub> to an embedding <em>z</em>, and small heads map <em>z</em>
+        to the controls and gates of a five-module DSP chain that processes a different
+        recording dry<sub>B</sub>. In training (dashed), the same plugin configuration
+        &theta; renders A and B, and the output is compared with wet<sub>B</sub>. Information
+        about the source of A in <em>z</em> cannot help reconstruct B, but no loss removes
+        it from <em>z</em>.
       </p>
     </div>
   </div>
@@ -662,7 +663,7 @@
     <!-- TODO: fill in once paper is published -->
     <pre>@inproceedings{long2025tape,
   title     = {TAPE: Learning General Audio Effect Representations},
-  author    = {Long, Phillip and Zang, Yongyi and Benetatos, Christodoulos and Yang, Qihui and Liu, Junfei and McAuley, Julian and Leistikow, Randal},
+  author    = {Long, Phillip and Zang, Yongyi and Yang, Qihui and Benetatos, Christodoulos and Liu, Junfei and Leistikow, Randal and McAuley, Julian and Cook, Perry R.},
   booktitle = {TODO},
   year      = {2025},
 }</pre>
