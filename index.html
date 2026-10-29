@@ -95,9 +95,10 @@
       A differentiable digital signal processing (DSP) chain decodes the embedding into
       editable parameters in one forward pass and applies them to a different unprocessed
       recording. Its modules are equalization, compression, waveshaping, a small residual
-      network, and reverberation. TAPE achieves lower spectral error than the previous state
-      of the art for both single-step regression and multi-step search, while running
-      275&times; faster than the multi-step approach. Because the decoder outputs DSP
+      network, and reverberation. TAPE achieves lower spectral error than DeepAFx-ST, the
+      previous state of the art for single-step regression, and lower spectral error than
+      per-example search over a chain approximating ST-ITO's, while running 275&times; faster
+      than that search. Because the decoder outputs DSP
       parameters, its chain can also run causally: a C++ implementation with the trained
       weights processed 128-sample buffers 1.8&times; faster than real time, with no missed
       deadlines.
