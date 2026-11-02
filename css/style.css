@@ -94,6 +94,12 @@ body {
   color: #fff;
 }
 
+.pill-icon-arxiv {
+  height: 0.95em;
+  width: auto;
+  display: inline-block;
+}
+
 .link-pill.disabled {
   border-color: var(--border);
   color: var(--muted);
